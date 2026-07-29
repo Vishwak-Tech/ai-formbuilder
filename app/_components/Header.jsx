@@ -1,8 +1,12 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { LayoutDashboard } from "lucide-react";
 
 function Header() {
+  const { isSignedIn } = useUser();
   return (
     <header className="sticky top-0 z-50 border-b-4 border-black bg-[#FFF8E7]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
@@ -25,11 +29,32 @@ function Header() {
             </span>
           </h1>
         </Link>
-
         {/* CTA */}
-        <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 text-lg font-black uppercase text-black shadow-[6px_6px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none">
-          Get Started →
-        </Button>
+        {isSignedIn ? (
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 font-black uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[10px_10px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none">
+                <LayoutDashboard size={18} />
+                Dashboard
+              </Button>
+            </Link>
+            <div className="rounded-none border-4 border-black bg-yellow-300 p-1 shadow-[4px_4px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0_#000]">
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "h-10 w-10 rounded-none",
+                  },
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <Link href="/sign-in">
+            <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 text-lg font-black uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[10px_10px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none">
+              Get Started →
+            </Button>
+          </Link>
+        )}
       </div>
     </header>
   );
