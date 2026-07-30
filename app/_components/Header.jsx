@@ -8,7 +8,7 @@ import { LayoutDashboard } from "lucide-react";
 function Header() {
   const { isSignedIn } = useUser();
   return (
-    <header className="sticky top-0 z-50 border-b-4 border-black bg-[#FFF8E7]">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b-4 border-black bg-[#FFF8E7]">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
@@ -33,12 +33,15 @@ function Header() {
         {isSignedIn ? (
           <div className="flex items-center gap-4">
             <Link href="/dashboard">
-              <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 font-black uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[10px_10px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none">
+              <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 font-black 
+              uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 
+              hover:-translate-y-1 hover:shadow-[10px_10px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none">
                 <LayoutDashboard size={18} />
                 Dashboard
               </Button>
             </Link>
-            <div className="rounded-none border-4 border-black bg-yellow-300 p-1 shadow-[4px_4px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0_#000]">
+            <div className="rounded-none border-4 border-black bg-yellow-300 p-1 
+            shadow-[4px_4px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[8px_8px_0_#000]">
               <UserButton
                 appearance={{
                   elements: {
@@ -50,7 +53,9 @@ function Header() {
           </div>
         ) : (
           <Link href="/sign-in">
-            <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 text-lg font-black uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[10px_10px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none">
+            <Button className="rounded-none border-4 border-black bg-yellow-300 px-6 py-6 text-lg font-black 
+            uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 
+            hover:shadow-[10px_10px_0_#000] active:translate-x-1 active:translate-y-1 active:shadow-none">
               Get Started →
             </Button>
           </Link>
@@ -61,47 +66,3 @@ function Header() {
 }
 
 export default Header;
-
-// {/* Navigation */}
-{
-  /* <nav className="hidden items-center gap-8 text-lg font-bold md:flex"> */
-}
-{
-  /* <Link href="#" className="hover:underline"> */
-}
-{
-  /* Features */
-}
-{
-  /* </Link> */
-}
-{
-  /* <Link href="#" className="hover:underline"> */
-}
-{
-  /* Pricing */
-}
-{
-  /* </Link> */
-}
-{
-  /* <Link href="#" className="hover:underline"> */
-}
-{
-  /* Templates */
-}
-{
-  /* </Link> */
-}
-{
-  /* <Link href="#" className="hover:underline"> */
-}
-{
-  /* Contact */
-}
-{
-  /* </Link> */
-}
-{
-  /* </nav> */
-}
