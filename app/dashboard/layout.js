@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
     <div>
       <SideNav />
 
-      <main className="ml-72 mt-20 p-8">
+      <main className="ml-72 p-4">
         {children}
       </main>
     </div>
