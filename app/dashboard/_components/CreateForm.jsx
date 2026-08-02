@@ -13,12 +13,14 @@ import { model } from "@/configs/AiModal";
 import { useUser } from "@clerk/nextjs";
 import { forms } from "@/configs/schema";
 import { db } from "@/configs";
+import { useRouter } from "next/navigation";
 
 function CreateForm() {
   const [openDialog, setOpenDialog] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
+  const route = useRouter();
 
   const onCreateForm = async () => {
     if (!userInput?.trim()) return;
@@ -34,9 +36,25 @@ Generate a professional, production-ready form based on the following request.
 USER REQUEST:
 "${userInput}"
 
-Return ONLY a valid JSON array.
+Return ONLY valid JSON.
 
-Each field must follow this structure:
+The JSON must have exactly this structure:
+
+{
+  "formTitle": "Meaningful Form Title",
+  "description": "Short description of the form",
+  "fields": [
+    {
+      "id": "snake_case_id",
+      "label": "Human Readable Label",
+      "type": "text",
+      "required": true,
+      "placeholder": "Helpful placeholder"
+    }
+  ]
+}
+
+FIELD OBJECT RULES:
 
 {
   "id": "snake_case_id",
@@ -49,10 +67,13 @@ Each field must follow this structure:
 
 IMPORTANT RULES:
 
-- Return ONLY JSON.
+- Return ONLY valid JSON.
 - Never return markdown.
-- Never explain anything.
+- Never return explanations.
 - Never include comments.
+- formTitle must always exist.
+- description must always exist.
+- fields must always be an array.
 - Generate between 10 and 20 meaningful fields.
 - Think like a senior Product Designer.
 - Build forms used in real-world SaaS products.
@@ -63,25 +84,25 @@ FIELD RULES:
 
 - id must be unique and snake_case.
 - label must be user-friendly.
-- required must always be boolean.
-- placeholder should exist for:
+- required must always be a boolean (true or false).
+- placeholder is required only for:
   - text
   - email
   - number
   - tel
   - textarea
-- placeholder should NOT exist for:
+- Do NOT include placeholder for:
   - select
   - radio
   - checkbox
   - date
-- options should ONLY exist for:
+- options must ONLY exist for:
   - select
   - radio
   - checkbox with multiple choices
-- A single agreement checkbox must NOT contain options.
+- A single agreement checkbox must NOT contain an options array.
 
-Examples of forms you can generate:
+Examples of forms:
 
 - Student Registration
 - Job Application
@@ -102,7 +123,7 @@ Examples of forms you can generate:
 - Survey
 - Hackathon Registration
 
-Return ONLY the JSON array.
+Return ONLY valid JSON matching the required structure.
 `;
 
       const result = await model.generateContent(prompt);
@@ -112,13 +133,20 @@ Return ONLY the JSON array.
       const formSchema = JSON.parse(text);
       console.log(formSchema);
 
-      const res = await db.insert(forms).values({
-        formTitle: formSchema.formTitle,
-        jsonForm: JSON.stringify(formSchema),
-        createdBy: user?.primaryEmailAddress?.emailAddress,
-      }) .returning({ id: forms.id });
+      const res = await db
+        .insert(forms)
+        .values({
+          formTitle: formSchema.formTitle,
+          jsonForm: JSON.stringify(formSchema),
+          createdBy: user?.primaryEmailAddress?.emailAddress,
+        })
+        .returning({ id: forms.id });
 
-      console.log(res);
+      console.log("New Form ID",res[0].id);
+      if(res[0].id){
+        route.push('/edit-form/'+res[0].id)
+      }
+
     } catch (error) {
       console.error("Gemini Error:", error);
     } finally {
