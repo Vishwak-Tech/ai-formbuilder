@@ -155,35 +155,55 @@ Return ONLY valid JSON matching the required structure.
   };
 
   return (
-    <div>
-      <Button onClick={() => setOpenDialog(true)}>+ Create Form</Button>
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create new form</DialogTitle>
-            <DialogDescription>
-              <Textarea
-                className="my-2"
-                placeholder="Write Description of Your Form"
-                onChange={(event) => setUserInput(event.target.value)}
-              />
-              <div className="flex gap-2 my-3 justify-end">
-                <Button
-                  onClick={() => setOpenDialog(false)}
-                  varient="destructive"
-                >
-                  Cancel
-                </Button>
-                <Button onClick={onCreateForm} disabled={loading}>
-                  {loading ? "Generating..." : "Generate Form"}
-                </Button>
-              </div>
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
+  <div>
+    <Button
+      onClick={() => setOpenDialog(true)}
+      className="border-4 border-black bg-yellow-300 text-black font-bold shadow-[4px_4px_0px_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+    >
+      + Create Form
+    </Button>
+
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+      <DialogContent className="border-4 border-black bg-white shadow-[8px_8px_0px_#000] rounded-xl max-w-xl">
+        <DialogHeader>
+          <DialogTitle className="text-3xl font-extrabold text-black">
+            Create New Form
+          </DialogTitle>
+
+          <DialogDescription className="mt-3 text-black">
+            <p className="mb-4 font-medium">
+              Describe the form you want AI to generate.
+            </p>
+
+            <Textarea
+              className="min-h-45 resize-none border-4 border-black bg-yellow-100 text-black placeholder:text-gray-600 font-medium shadow-[4px_4px_0px_#000] focus-visible:ring-0 focus-visible:outline-none"
+              placeholder="Example: Create an internship application form with personal details, education, skills, resume upload, and availability..."
+              onChange={(event) => setUserInput(event.target.value)}
+            />
+
+            <div className="flex justify-end gap-4 mt-6">
+              <Button
+                onClick={() => setOpenDialog(false)}
+                variant="outline"
+                className="border-4 border-black bg-red-300 text-black font-bold shadow-[4px_4px_0px_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all"
+              >
+                Cancel
+              </Button>
+
+              <Button
+                onClick={onCreateForm}
+                disabled={loading}
+                className="border-4 border-black bg-lime-300 text-black font-bold shadow-[4px_4px_0px_#000] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-70"
+              >
+                {loading ? "Generating..." : "✨ Generate Form"}
+              </Button>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  </div>
+);
 }
 
 export default CreateForm;
