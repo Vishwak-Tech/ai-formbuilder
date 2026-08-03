@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import FieldEdit from "./FieldEdit";
 
-function FormUi({ jsonForm }) {
+function FormUi({ jsonForm, onFieldUpdate, deleteField }) {
+
   return (
     <div className="w-full max-w-2xl rounded-xl border-4 border-black bg-white p-8 shadow-[6px_6px_0px_#000]">
       <h1 className="text-3xl font-extrabold text-center">
@@ -17,7 +18,7 @@ function FormUi({ jsonForm }) {
       </p>
 
       <div className="space-y-6">
-        {jsonForm?.fields?.map((field) => (
+        {jsonForm?.fields?.map((field, index) => (
           <div
             key={field.id}
             className="flex items-start justify-between gap-4 border-b border-gray-200 pb-5"
@@ -84,7 +85,10 @@ function FormUi({ jsonForm }) {
                 ))}
             </div>
 
-            <FieldEdit field={field} />
+            <FieldEdit field={field}
+            onUpdate={(value)=> onFieldUpdate(value, index)}
+            deleteField={() => deleteField(index)}
+            />
           </div>
         ))}
       </div>

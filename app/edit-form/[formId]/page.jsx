@@ -16,6 +16,8 @@ function EditForm() {
 
   const [jsonForm, setJsonForm] = useState(null);
   const router = useRouter();
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+  const [record, setRecord] = useState(null);
 
   console.log(params);
   const formId = Number(params.formId);
@@ -41,9 +43,65 @@ function EditForm() {
     }
 
     const formData = result[0];
+    setRecord(result[0]);
     const parsedJson = JSON.parse(formData.jsonForm);
     console.log(parsedJson);
     setJsonForm(parsedJson);
+  };
+
+  useEffect(() => {
+    // console.log("useEffect fired", updateTrigger);
+    if (updateTrigger > 0 && record) {
+      updateJsonFormInDb();
+    }
+  }, [jsonForm, updateTrigger]);
+
+  const onFieldUpdate = (value, index) => {
+    const updatedForm = { ...jsonForm };
+
+    updatedForm.fields = [...updatedForm.fields];
+
+    updatedForm.fields[index] = {
+      ...updatedForm.fields[index],
+      ...value,
+    };
+
+    setJsonForm(updatedForm);
+    setUpdateTrigger((prev) => prev + 1);
+  };
+
+  const updateJsonFormInDb = async () => {
+    try {
+      await db
+        .update(forms)
+        .set({
+          jsonForm: JSON.stringify(jsonForm),
+        })
+        .where(
+          and(
+            eq(forms.id, record.id),
+            eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress),
+          ),
+        );
+
+      console.log("Form updated successfully");
+    } catch (error) {
+      console.error("Failed to update form:", error);
+    }
+  };
+
+  const deleteField = (indexToRemove) => {
+    const result = jsonForm.fields.filter(
+      (_, index) => index !== indexToRemove,
+    );
+
+    const updatedForm = {
+      ...jsonForm,
+      fields: result,
+    };
+
+    setJsonForm(updatedForm);
+    setUpdateTrigger((prev) => prev + 1);
   };
 
   return (
@@ -78,7 +136,11 @@ function EditForm() {
           </div>
 
           <div className="flex min-h-162.5 items-start justify-center rounded-lg border-4 border-dashed border-black bg-[#FFFDF5] p-8">
-            <FormUi jsonForm={jsonForm} />
+            <FormUi
+              jsonForm={jsonForm}
+              onFieldUpdate={onFieldUpdate}
+              deleteField={(index) => deleteField(index)}
+            />
           </div>
         </div>
       </div>
