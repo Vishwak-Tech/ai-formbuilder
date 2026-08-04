@@ -9,6 +9,9 @@ import { useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import FormUi from "../_components/FormUi";
+import { toast } from "@/components/ui/toast";
+import Controller from "../_components/Controller";
+import { backgrounds } from "../_constants/backgrounds";
 
 function EditForm() {
   const params = useParams();
@@ -18,6 +21,10 @@ function EditForm() {
   const router = useRouter();
   const [updateTrigger, setUpdateTrigger] = useState(0);
   const [record, setRecord] = useState(null);
+
+  const [selectedTheme, setSelectedTheme] = useState("light");
+  const [selectedBackground, setSelectedBackground] = useState("none");
+  const [selectedStyle, setSelectedStyle] = useState("neobrutalism");
 
   console.log(params);
   const formId = Number(params.formId);
@@ -83,7 +90,10 @@ function EditForm() {
             eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress),
           ),
         );
-
+      toast.add({
+        title: "Success",
+        description: "Form updated successfully.",
+      });
       console.log("Form updated successfully");
     } catch (error) {
       console.error("Failed to update form:", error);
@@ -104,12 +114,17 @@ function EditForm() {
     setUpdateTrigger((prev) => prev + 1);
   };
 
+  const currentBackground =
+    backgrounds.find((bg) => bg.id === selectedBackground)?.className ||
+    "bg-white";
+
   return (
     <div className="min-h-screen bg-[#FFF8E7] p-8">
       {/* Back Button */}
       <button
         onClick={() => router.back()}
-        className="mb-6 flex items-center gap-2 border-4 border-black bg-yellow-300 px-5 py-2 font-bold shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+        className="mb-6 flex items-center gap-2 border-4 border-black bg-yellow-300 px-5 py-2 
+        font-bold shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
       >
         <ArrowLeft className="h-5 w-5" />
         Back
@@ -117,12 +132,15 @@ function EditForm() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Controller Panel */}
-        <div className="rounded-xl border-4 border-black bg-cyan-300 p-6 shadow-[6px_6px_0px_#000]">
-          <h2 className="mb-5 text-2xl font-extrabold">🎛️ Controller</h2>
-
-          <p className="font-medium text-black">
-            Form customization options will appear here.
-          </p>
+        <div className="controller-scroll h-[calc(100vh-140px)] overflow-y-auto rounded-xl border-4 border-black bg-cyan-100 p-6 shadow-[6px_6px_0px_#000]">
+          <Controller
+            selectedTheme={selectedTheme}
+            setSelectedTheme={setSelectedTheme}
+            selectedBackground={selectedBackground}
+            setSelectedBackground={setSelectedBackground}
+            selectedStyle={selectedStyle}
+            setSelectedStyle={setSelectedStyle}
+          />
         </div>
 
         {/* Form Preview */}
@@ -135,11 +153,15 @@ function EditForm() {
             </span>
           </div>
 
-          <div className="flex min-h-162.5 items-start justify-center rounded-lg border-4 border-dashed border-black bg-[#FFFDF5] p-8">
+          <div
+            className={`flex min-h-162.5 items-start justify-center rounded-lg border-4 border-dashed border-black p-8 transition-all duration-500 ${currentBackground}`}
+          >
             <FormUi
               jsonForm={jsonForm}
+              selectedTheme={selectedTheme}
+              selectedStyle={selectedStyle}
               onFieldUpdate={onFieldUpdate}
-              deleteField={(index) => deleteField(index)}
+              deleteField={deleteField}
             />
           </div>
         </div>
