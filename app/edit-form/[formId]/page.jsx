@@ -19,7 +19,6 @@ function EditForm() {
 
   const [jsonForm, setJsonForm] = useState(null);
   const router = useRouter();
-  const [updateTrigger, setUpdateTrigger] = useState(0);
   const [record, setRecord] = useState(null);
 
   const [selectedTheme, setSelectedTheme] = useState("light");
@@ -54,35 +53,23 @@ function EditForm() {
     const parsedJson = JSON.parse(formData.jsonForm);
     console.log(parsedJson);
     setJsonForm(parsedJson);
+
+    setSelectedTheme(formData.theme || "light");
+    setSelectedBackground(formData.background || "none");
+    setSelectedStyle(formData.style || "neobrutalism");
   };
 
-  useEffect(() => {
-    // console.log("useEffect fired", updateTrigger);
-    if (updateTrigger > 0 && record) {
-      updateJsonFormInDb();
-    }
-  }, [jsonForm, updateTrigger]);
+  const saveForm = async (updatedData = {}) => {
+    if (!record) return;
 
-  const onFieldUpdate = (value, index) => {
-    const updatedForm = { ...jsonForm };
-
-    updatedForm.fields = [...updatedForm.fields];
-
-    updatedForm.fields[index] = {
-      ...updatedForm.fields[index],
-      ...value,
-    };
-
-    setJsonForm(updatedForm);
-    setUpdateTrigger((prev) => prev + 1);
-  };
-
-  const updateJsonFormInDb = async () => {
     try {
       await db
         .update(forms)
         .set({
-          jsonForm: JSON.stringify(jsonForm),
+          jsonForm: JSON.stringify(updatedData.jsonForm ?? jsonForm),
+          theme: updatedData.theme ?? selectedTheme,
+          background: updatedData.background ?? selectedBackground,
+          style: updatedData.style ?? selectedStyle,
         })
         .where(
           and(
@@ -90,28 +77,69 @@ function EditForm() {
             eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress),
           ),
         );
+
       toast.add({
         title: "Success",
         description: "Form updated successfully.",
       });
-      console.log("Form updated successfully");
     } catch (error) {
       console.error("Failed to update form:", error);
     }
   };
 
-  const deleteField = (indexToRemove) => {
-    const result = jsonForm.fields.filter(
-      (_, index) => index !== indexToRemove,
-    );
+  const changeTheme = (theme) => {
+    setSelectedTheme(theme);
 
+    saveForm({
+      theme,
+    });
+  };
+
+  const changeBackground = (background) => {
+    setSelectedBackground(background);
+
+    saveForm({
+      background,
+    });
+  };
+
+  const changeStyle = (style) => {
+    setSelectedStyle(style);
+
+    saveForm({
+      style,
+    });
+  };
+
+  const onFieldUpdate = (value, index) => {
     const updatedForm = {
       ...jsonForm,
-      fields: result,
+      fields: [...jsonForm.fields],
+    };
+
+    updatedForm.fields[index] = {
+      ...updatedForm.fields[index],
+      ...value,
     };
 
     setJsonForm(updatedForm);
-    setUpdateTrigger((prev) => prev + 1);
+
+    saveForm({
+      jsonForm: updatedForm,
+    });
+  };
+
+  const deleteField = (indexToRemove) => {
+    const updatedForm = {
+      ...jsonForm,
+      fields: jsonForm.fields.filter((_, index) => index !== indexToRemove),
+    };
+
+    setJsonForm(updatedForm);
+
+    saveForm({
+      jsonForm: updatedForm,
+    });
   };
 
   const currentBackground =
@@ -135,11 +163,11 @@ function EditForm() {
         <div className="controller-scroll h-[calc(100vh-140px)] overflow-y-auto rounded-xl border-4 border-black bg-cyan-100 p-6 shadow-[6px_6px_0px_#000]">
           <Controller
             selectedTheme={selectedTheme}
-            setSelectedTheme={setSelectedTheme}
+            setSelectedTheme={changeTheme}
             selectedBackground={selectedBackground}
-            setSelectedBackground={setSelectedBackground}
+            setSelectedBackground={changeBackground}
             selectedStyle={selectedStyle}
-            setSelectedStyle={setSelectedStyle}
+            setSelectedStyle={changeStyle}
           />
         </div>
 
