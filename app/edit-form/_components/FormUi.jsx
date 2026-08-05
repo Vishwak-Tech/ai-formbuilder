@@ -13,6 +13,7 @@ function FormUi({
   deleteField,
   selectedTheme,
   selectedStyle,
+  editable=true
 }) {
   const theme = themes[selectedTheme] || themes.light;
   const style =
@@ -126,11 +127,11 @@ function FormUi({
                 ))}
             </div>
 
-            <FieldEdit
+           {editable && <FieldEdit
               field={field}
               onUpdate={(value) => onFieldUpdate(value, index)}
               deleteField={() => deleteField(index)}
-            />
+            />}
           </div>
         ))}
       </div>

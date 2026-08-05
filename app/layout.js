@@ -26,8 +26,8 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full pt-20">
-        <Header/>
+      <body className="min-h-full">
+        <Header className="pt-20"/>
         <Toaster/>
         {children}
       </body>

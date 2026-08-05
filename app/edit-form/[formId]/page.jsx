@@ -6,12 +6,13 @@ import { db } from "@/configs";
 import { forms } from "@/configs/schema";
 import { useUser } from "@clerk/nextjs";
 import { useParams } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Share, Share2, SquareArrowOutUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import FormUi from "../_components/FormUi";
 import { toast } from "@/components/ui/toast";
 import Controller from "../_components/Controller";
 import { backgrounds } from "../_constants/backgrounds";
+import Link from "next/link";
 
 function EditForm() {
   const params = useParams();
@@ -148,15 +149,35 @@ function EditForm() {
 
   return (
     <div className="min-h-screen bg-[#FFF8E7] p-8">
-      {/* Back Button */}
-      <button
-        onClick={() => router.back()}
-        className="mb-6 flex items-center gap-2 border-4 border-black bg-yellow-300 px-5 py-2 
-        font-bold shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
-      >
-        <ArrowLeft className="h-5 w-5" />
-        Back
-      </button>
+      <div className="mb-6 flex items-center justify-between">
+        <button
+          onClick={() => router.back()}
+          className="flex items-center gap-2 rounded-lg border-4 border-black bg-yellow-300 px-5 py-2 font-bold 
+          shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+        >
+          <ArrowLeft className="h-5 w-5" />
+          Back
+        </button>
+
+        <div className="flex items-center gap-3">
+          <Link href={'/aiform/'+record?.id} target="_blank">
+            <button
+              className="flex gap-2 rounded-lg border-4 border-black bg-cyan-300 px-5 py-2 font-bold 
+          shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+            >
+              <SquareArrowOutUpRight />
+              Preview
+            </button>
+          </Link>
+
+          <button
+            className="flex gap-2 rounded-lg border-4 border-black bg-green-400 px-5 py-2 font-bold 
+          shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
+          >
+            <Share2 /> Publish
+          </button>
+        </div>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Controller Panel */}
@@ -173,14 +194,6 @@ function EditForm() {
 
         {/* Form Preview */}
         <div className="rounded-xl border-4 border-black bg-white p-6 shadow-[6px_6px_0px_#000] lg:col-span-2">
-          <div className="mb-5 flex items-center justify-between border-b-4 border-black pb-4">
-            <h2 className="text-2xl font-extrabold">Live Preview</h2>
-
-            <span className="rounded-lg border-4 border-black bg-lime-300 px-3 py-1 font-bold shadow-[3px_3px_0px_#000]">
-              Preview
-            </span>
-          </div>
-
           <div
             className={`flex min-h-162.5 items-start justify-center rounded-lg border-4 border-dashed border-black p-8 transition-all duration-500 ${currentBackground}`}
           >
