@@ -57,6 +57,7 @@ function LiveAiForm() {
           selectedTheme={formData?.theme}
           selectedStyle={formData?.style}
           editable={false}
+          formId={formData?.id}
         />
       </div>
 

@@ -4,6 +4,7 @@ import {
   varchar,
   text,
   timestamp,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const forms = pgTable("forms", {
@@ -20,4 +21,17 @@ export const forms = pgTable("forms", {
   createdBy: varchar("created_by", { length: 255 }).notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const formResponses = pgTable("form_responses", {
+  id: serial("id").primaryKey(),
+
+  formRef: integer("form_ref")
+    .references(() => forms.id)
+    .notNull(),
+
+  userEmail: varchar("user_email", { length: 255 }),
+  jsonResponse: text("json_response").notNull(),
+
+  submittedAt: timestamp("submitted_at").defaultNow(),
 });
