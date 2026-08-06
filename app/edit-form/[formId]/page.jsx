@@ -13,6 +13,7 @@ import { toast } from "@/components/ui/toast";
 import Controller from "../_components/Controller";
 import { backgrounds } from "../_constants/backgrounds";
 import Link from "next/link";
+import ShareFormDashboard from "@/app/dashboard/_components/ShareFormDashboard";
 
 function EditForm() {
   const params = useParams();
@@ -170,12 +171,7 @@ function EditForm() {
             </button>
           </Link>
 
-          <button
-            className="flex gap-2 rounded-lg border-4 border-black bg-green-400 px-5 py-2 font-bold 
-          shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
-          >
-            <Share2 /> Publish
-          </button>
+          <ShareFormDashboard formId={record?.id} />
         </div>
       </div>
 

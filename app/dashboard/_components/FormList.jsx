@@ -152,7 +152,7 @@ function FormList() {
               </Link>
 
               <Link
-                href={`/dashboard/responses/${form.id}`}
+                href={`/dashboard/responses`}
                 className="flex items-center justify-center gap-2 bg-pink-200 py-3 font-black transition-all hover:bg-pink-300"
               >
                 <BarChart3 size={18} />
