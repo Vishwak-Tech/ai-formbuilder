@@ -4,8 +4,47 @@ import Link from "next/link";
 import { LibraryBig, LineChart, MessageSquare, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Crown } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { db } from "@/configs";
+import { forms } from "@/configs/schema";
+import { eq } from "drizzle-orm";
 
 function SideNav() {
+  const { user } = useUser();
+  const [totalForms, setTotalForms] = useState(0);
+
+  const maxFreeForms = 5;
+  const percentage =
+  maxFreeForms > 0
+    ? Math.min((totalForms / maxFreeForms) * 100, 100)
+    : 0;
+
+  const remainingForms = Math.max(
+    maxFreeForms - totalForms,
+    0
+  );
+
+  useEffect(() => {
+    if (user) {
+      getTotalForms();
+    }
+  }, [user]);
+
+  const getTotalForms = async () => {
+  try {
+    const result = await db
+      .select()
+      .from(forms)
+      .where(eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress));
+
+    setTotalForms(result.length);
+  } catch (error) {
+    console.error("Failed to fetch forms:", error);
+  }
+};
+
   const menuList = [
     {
       id: 1,
@@ -51,22 +90,46 @@ function SideNav() {
         ))}
       </nav>
       <div className="mt-auto border-t-4 border-black bg-[#FFF8E7] p-6">
-        <Button
-          className="mb-5 w-full rounded-none border-4 border-black bg-yellow-300 py-6 font-black 
-        uppercase text-black shadow-[6px_6px_0_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[10px_10px_0_#000]"
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-sm font-black uppercase tracking-wide">
+            Free Plan
+          </h3>
+
+          <span className="border-2 border-black bg-yellow-300 px-2 py-1 text-xs font-black">
+            {totalForms} / {maxFreeForms}
+          </span>
+        </div>
+
+        <Progress value={percentage} className="h-3 border-2 border-black" />
+
+        <p className="mt-4 text-center text-sm font-bold">
+          You&apos;ve created <span className="text-yellow-600">{totalForms}</span>{" "}
+          of your <span className="text-yellow-600">{maxFreeForms}</span> free
+          AI forms.
+        </p>
+
+        <p className="mt-2 text-center text-xs leading-5 text-gray-700">
+          Unlock unlimited AI forms, advanced analytics, premium themes, custom
+          branding, and priority support.
+        </p>
+
+        <button
+          className="mt-5 flex w-full items-center justify-center gap-2
+    border-4 border-black
+    bg-yellow-300
+    py-3
+    font-black
+    uppercase
+    shadow-[4px_4px_0px_#000]
+    transition-all duration-200
+    hover:bg-yellow-400
+    hover:translate-x-1
+    hover:translate-y-1
+    hover:shadow-none"
         >
-          + Create Form
-        </Button>
-
-        <Progress value={66.7} className="h-3 border-2 border-black" />
-
-        <p className="mt-3 text-center text-sm font-bold">
-          You&apos;ve used 2 of your 3 free forms.
-        </p>
-
-        <p className="mt-2 text-center text-xs text-gray-700">
-          Upgrade to Pro for unlimited AI forms and premium features.
-        </p>
+          <Crown size={18} />
+          Upgrade to Pro
+        </button>
       </div>
     </aside>
   );
