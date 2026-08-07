@@ -11,14 +11,6 @@ import { backgrounds } from "@/app/edit-form/_constants/backgrounds";
 import Image from "next/image";
 import Link from "next/link";
 
-export async function generateMetadata({ params }) {
-  return {
-    title: "Fill Form",
-    description:
-      "Complete this AI-powered form created using FormCraft.",
-  };
-}
-
 function LiveAiForm() {
   const params = useParams();
 

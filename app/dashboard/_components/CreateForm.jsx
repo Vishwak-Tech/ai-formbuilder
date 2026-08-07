@@ -15,12 +15,6 @@ import { forms } from "@/configs/schema";
 import { db } from "@/configs";
 import { useRouter } from "next/navigation";
 
-export const metadata = {
-  title: "Create AI Form",
-  description:
-    "Describe your form idea and let Gemini AI generate a fully customizable form instantly.",
-};
-
 function CreateForm() {
   const [openDialog, setOpenDialog] = useState(false);
   const [userInput, setUserInput] = useState("");
