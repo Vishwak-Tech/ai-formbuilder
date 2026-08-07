@@ -15,6 +15,12 @@ import {
   Sparkles,
 } from "lucide-react";
 
+export const metadata = {
+  title: "Analytics",
+  description:
+    "Track form performance with detailed analytics, submission trends and response insights.",
+};
+
 function Analytics() {
   const { user } = useUser();
 

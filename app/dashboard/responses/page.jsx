@@ -16,6 +16,12 @@ import {
   Download,
 } from "lucide-react";
 
+export const metadata = {
+  title: "Responses",
+  description:
+    "View, manage and analyze all responses collected through your AI-generated forms.",
+};
+
 function Responses() {
   const { user } = useUser();
 

@@ -2,6 +2,12 @@ import { Button } from "@/components/ui/button"
 import CreateForm from "./_components/CreateForm"
 import FormList from "./_components/FormList";
 
+export const metadata = {
+  title: "Dashboard",
+  description:
+    "Manage your AI forms, responses, analytics and subscriptions from your FormCraft dashboard.",
+};
+
 function Dashboard() {
   return (
     <div className="space-y-8 p-10">

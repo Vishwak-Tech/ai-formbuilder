@@ -2,6 +2,12 @@ import { SignIn } from "@clerk/nextjs";
 import Link from "next/link";
 import { Bot, Sparkles, FileText, Zap } from "lucide-react";
 
+export const metadata = {
+  title: "Sign In",
+  description:
+    "Sign in to your FormCraft account to create, manage and share AI-powered forms.",
+};
+
 export default function Page() {
   return (
     <main className="min-h-screen bg-[#FFF8E7]">
