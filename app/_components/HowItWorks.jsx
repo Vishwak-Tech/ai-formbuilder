@@ -103,34 +103,6 @@ function HowItWorks() {
           Customize every detail, publish instantly, and start collecting
           responses — all without writing a single line of code.
         </p>
-
-        {/* Stats */}
-
-        {/* <div className="mt-14 flex flex-wrap justify-center gap-8"> */}
-{/*  */}
-          {/* <div className="text-center"> */}
-            {/* <h3 className="text-4xl font-black">⚡</h3> */}
-            {/* <p className="font-bold uppercase"> */}
-              {/* AI Powered */}
-            {/* </p> */}
-          {/* </div> */}
-{/*  */}
-          {/* <div className="text-center"> */}
-            {/* <h3 className="text-4xl font-black">🎨</h3> */}
-            {/* <p className="font-bold uppercase"> */}
-              {/* Live Preview */}
-            {/* </p> */}
-          {/* </div> */}
-{/*  */}
-          {/* <div className="text-center"> */}
-            {/* <h3 className="text-4xl font-black">🚀</h3> */}
-            {/* <p className="font-bold uppercase"> */}
-              {/* Instant Publish */}
-            {/* </p> */}
-          {/* </div> */}
-{/*  */}
-        {/* </div> */}
-
         {/* Cards */}
 
         <div className="mt-20 grid gap-8 md:grid-cols-3">

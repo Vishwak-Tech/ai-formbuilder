@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Hero = () => {
   return (
     <section className="min-h-screen bg-[#FFF8E7] flex items-center justify-center px-6">
@@ -19,13 +21,13 @@ const Hero = () => {
           </p>
 
           <div className="mt-10 flex flex-wrap justify-center gap-6">
-            <a
-              href="#"
+            <Link
+              href="/dashboard"
               className="border-4 border-black bg-yellow-300 px-8 py-4 text-xl font-black uppercase shadow-[6px_6px_0px_#000] 
               transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"
             >
               + Create AI Form
-            </a>
+            </Link>
 
             <a
               href="#"
