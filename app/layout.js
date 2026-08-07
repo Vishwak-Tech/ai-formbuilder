@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "./_components/Header";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toast";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <Header className="pt-20"/>
         <Toaster/>
         {children}
+        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
     </html>
     </ClerkProvider>
