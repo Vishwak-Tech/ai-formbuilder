@@ -1,17 +1,20 @@
-"use client"
-import { Button } from "@/components/ui/button";
-import { Check, Crown, X, Zap } from "lucide-react";
+"use client";
+
 import React from "react";
-import { startRazorpayPayment } from "@/utils/payment";
 import { useUser } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { Check, Crown, X } from "lucide-react";
+import { startRazorpayPayment } from "@/utils/payment";
 
 function PricingCard() {
   const { user } = useUser();
+
   return (
-    <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-2">
+    <div className="grid gap-8 lg:grid-cols-2">
       {/* FREE PLAN */}
+
       <div className="overflow-hidden rounded-2xl border-4 border-black bg-white shadow-[8px_8px_0px_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[12px_12px_0px_#000]">
-        <div className="border-b-4 border-black bg-cyan-300 p-5">
+        <div className="border-b-4 border-black bg-gray-100 p-5">
           <p className="text-sm font-black uppercase">Current Plan</p>
 
           <h2 className="mt-2 text-3xl font-black">FREE</h2>
@@ -106,22 +109,17 @@ function PricingCard() {
             <Check size={18} />
             <span>Priority Support</span>
           </div>
+
           <Button
             onClick={() =>
               startRazorpayPayment({
                 plan: "PRO_MONTHLY",
                 user,
-
-                onSuccess: (payment) => {
-                  console.log(payment);
-                },
-
-                onFailure: () => {
-                  console.log("Payment Cancelled");
-                },
+                onSuccess: (payment) => console.log(payment),
+                onFailure: () => console.log("Payment Cancelled"),
               })
             }
-            className="..."
+            className="mt-4 w-full border-4 border-black bg-black py-6 text-lg font-black text-white shadow-[4px_4px_0px_#000] transition-all hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#000]"
           >
             Upgrade with Razorpay
           </Button>

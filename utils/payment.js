@@ -12,18 +12,16 @@ export async function startRazorpayPayment({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        ...response,
-        clerkUserId: user.id,
-        email: user.primaryEmailAddress.emailAddress,
         plan,
       }),
     });
 
     const order = await res.json();
 
-    if (!order.id) {
-      throw new Error("Unable to create payment order.");
+    if (!res.ok || !order.id) {
+      throw new Error(order.error || "Unable to create payment order.");
     }
+
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
 
@@ -55,13 +53,20 @@ export async function startRazorpayPayment({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(response),
+            body: JSON.stringify({
+              ...response,
+              clerkUserId: user.id,
+              email: user.primaryEmailAddress.emailAddress,
+              plan,
+            }),
           });
 
           const result = await verify.json();
 
           if (!verify.ok || !result.success) {
-            throw new Error(result.message || "Payment verification failed.");
+            throw new Error(
+              result.message || "Payment verification failed."
+            );
           }
 
           console.log("✅ Payment Verified");
@@ -92,6 +97,7 @@ export async function startRazorpayPayment({
     if (!window.Razorpay) {
       throw new Error("Razorpay SDK failed to load.");
     }
+
     const razorpay = new window.Razorpay(options);
 
     razorpay.open();

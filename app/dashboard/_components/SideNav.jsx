@@ -2,48 +2,65 @@
 
 import Link from "next/link";
 import { LibraryBig, LineChart, MessageSquare, Shield } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Crown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { db } from "@/configs";
-import { forms } from "@/configs/schema";
-import { eq } from "drizzle-orm";
+import { forms, subscriptions } from "@/configs/schema";
+import { eq, and, gt } from "drizzle-orm";
+import { Button } from "@/components/ui/button";
 
 function SideNav() {
   const { user } = useUser();
   const [totalForms, setTotalForms] = useState(0);
+  const [isPro, setIsPro] = useState(false);
 
   const maxFreeForms = 5;
   const percentage =
-  maxFreeForms > 0
-    ? Math.min((totalForms / maxFreeForms) * 100, 100)
-    : 0;
+    maxFreeForms > 0 ? Math.min((totalForms / maxFreeForms) * 100, 100) : 0;
 
-  const remainingForms = Math.max(
-    maxFreeForms - totalForms,
-    0
-  );
+  const remainingForms = Math.max(maxFreeForms - totalForms, 0);
+
+  const checkSubscription = async () => {
+    try {
+      const result = await db
+        .select()
+        .from(subscriptions)
+        .where(
+          and(
+            eq(subscriptions.clerkUserId, user.id),
+            eq(subscriptions.status, "ACTIVE"),
+            eq(subscriptions.isActive, true),
+            gt(subscriptions.expiryDate, new Date()),
+          ),
+        );
+
+      setIsPro(result.length > 0);
+    } catch (error) {
+      console.error("Failed to fetch subscription:", error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
       getTotalForms();
+      checkSubscription();
     }
   }, [user]);
 
   const getTotalForms = async () => {
-  try {
-    const result = await db
-      .select()
-      .from(forms)
-      .where(eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress));
+    try {
+      const result = await db
+        .select()
+        .from(forms)
+        .where(eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress));
 
-    setTotalForms(result.length);
-  } catch (error) {
-    console.error("Failed to fetch forms:", error);
-  }
-};
+      setTotalForms(result.length);
+    } catch (error) {
+      console.error("Failed to fetch forms:", error);
+    }
+  };
 
   const menuList = [
     {
@@ -91,45 +108,71 @@ function SideNav() {
       </nav>
       <div className="mt-auto border-t-4 border-black bg-[#FFF8E7] p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-sm font-black uppercase tracking-wide">
-            Free Plan
+          <h3 className="font-black uppercase">
+            {isPro ? "Pro Plan" : "Free Plan"}
           </h3>
 
-          <span className="border-2 border-black bg-yellow-300 px-2 py-1 text-xs font-black">
-            {totalForms} / {maxFreeForms}
-          </span>
+          {isPro ? (
+            <span className="border-2 border-black bg-green-300 px-2 py-1 text-xs font-black">
+              UNLIMITED
+            </span>
+          ) : (
+            <span className="border-2 border-black bg-yellow-300 px-2 py-1 text-xs font-black">
+              {totalForms} / {maxFreeForms}
+            </span>
+          )}
         </div>
 
-        <Progress value={percentage} className="h-3 border-2 border-black" />
+        <Progress
+          value={isPro ? 100 : percentage}
+          className="h-3 border-2 border-black"
+        />
 
         <p className="mt-4 text-center text-sm font-bold">
-          You&apos;ve created <span className="text-yellow-600">{totalForms}</span>{" "}
-          of your <span className="text-yellow-600">{maxFreeForms}</span> free
-          AI forms.
+          {isPro ? (
+            <>
+              <span className="text-green-600">Unlimited AI Forms</span>{" "}
+              unlocked.
+            </>
+          ) : (
+            <>
+              You&apos;ve created{" "}
+              <span className="text-yellow-600">{totalForms}</span> of your{" "}
+              <span className="text-yellow-600">{maxFreeForms}</span> free AI
+              forms.
+            </>
+          )}
         </p>
 
         <p className="mt-2 text-center text-xs leading-5 text-gray-700">
-          Unlock unlimited AI forms, advanced analytics, premium themes, custom
-          branding, and priority support.
+          {isPro
+            ? "Thank you for supporting FormCraft. Enjoy all premium features."
+            : "Unlock unlimited AI forms, advanced analytics, premium themes, custom branding, and priority support."}
         </p>
 
-        <button
-          className="mt-5 flex w-full items-center justify-center gap-2
-    border-4 border-black
-    bg-yellow-300
-    py-3
-    font-black
-    uppercase
-    shadow-[4px_4px_0px_#000]
-    transition-all duration-200
-    hover:bg-yellow-400
-    hover:translate-x-1
-    hover:translate-y-1
-    hover:shadow-none"
-        >
-          <Crown size={18} />
-          Upgrade to Pro
-        </button>
+        {isPro ? (
+          <Button
+            disabled
+            className="mt-5 w-full border-4 border-black bg-green-400 font-black text-black"
+          >
+            <Crown size={18} />
+            Pro Active
+          </Button>
+        ) : (
+          <Link href="/dashboard/upgrade">
+            <Button
+              className="mt-5 w-full border-4 border-black bg-yellow-300 font-black text-black
+      shadow-[4px_4px_0px_#000]
+      transition-all
+      hover:translate-x-1
+      hover:translate-y-1
+      hover:shadow-none"
+            >
+              <Crown size={18} />
+              Upgrade to Pro
+            </Button>
+          </Link>
+        )}
       </div>
     </aside>
   );

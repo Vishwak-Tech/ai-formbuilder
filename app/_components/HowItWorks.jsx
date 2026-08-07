@@ -106,30 +106,30 @@ function HowItWorks() {
 
         {/* Stats */}
 
-        <div className="mt-14 flex flex-wrap justify-center gap-8">
-
-          <div className="text-center">
-            <h3 className="text-4xl font-black">⚡</h3>
-            <p className="font-bold uppercase">
-              AI Powered
-            </p>
-          </div>
-
-          <div className="text-center">
-            <h3 className="text-4xl font-black">🎨</h3>
-            <p className="font-bold uppercase">
-              Live Preview
-            </p>
-          </div>
-
-          <div className="text-center">
-            <h3 className="text-4xl font-black">🚀</h3>
-            <p className="font-bold uppercase">
-              Instant Publish
-            </p>
-          </div>
-
-        </div>
+        {/* <div className="mt-14 flex flex-wrap justify-center gap-8"> */}
+{/*  */}
+          {/* <div className="text-center"> */}
+            {/* <h3 className="text-4xl font-black">⚡</h3> */}
+            {/* <p className="font-bold uppercase"> */}
+              {/* AI Powered */}
+            {/* </p> */}
+          {/* </div> */}
+{/*  */}
+          {/* <div className="text-center"> */}
+            {/* <h3 className="text-4xl font-black">🎨</h3> */}
+            {/* <p className="font-bold uppercase"> */}
+              {/* Live Preview */}
+            {/* </p> */}
+          {/* </div> */}
+{/*  */}
+          {/* <div className="text-center"> */}
+            {/* <h3 className="text-4xl font-black">🚀</h3> */}
+            {/* <p className="font-bold uppercase"> */}
+              {/* Instant Publish */}
+            {/* </p> */}
+          {/* </div> */}
+{/*  */}
+        {/* </div> */}
 
         {/* Cards */}
 
