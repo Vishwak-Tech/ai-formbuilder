@@ -9,12 +9,6 @@ import { and, eq, gt } from "drizzle-orm";
 import PricingCard from "./_components/PricingCard";
 import SubscriptionDashboard from "./SubscriptionDashboard";
 
-export const metadata = {
-  title: "Upgrade to Pro",
-  description:
-    "Unlock unlimited AI forms, premium themes, analytics and advanced features with FormCraft Pro.",
-};
-
 export default function UpgradePage() {
   const { user } = useUser();
 
