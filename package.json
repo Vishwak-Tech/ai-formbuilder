@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest",
     "db:push": "npx drizzle-kit push",
     "db:studio": "npx drizzle-kit studio"
   },
@@ -32,10 +33,16 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@vitejs/plugin-react": "^4.7.0",
     "daisyui": "^5.7.4",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
-    "tailwindcss": "^4"
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4",
+    "vitest": "^3.2.7"
   }
 }
