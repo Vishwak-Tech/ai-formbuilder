@@ -108,6 +108,7 @@ function Controller({
         {backgrounds.map((bg) => (
           <button
             key={bg.id}
+            aria-label={`Select ${bg.id} background`}
             onClick={() => setSelectedBackground(bg.id)}
             className={`
         h-16 rounded-xl border-2 transition-all
