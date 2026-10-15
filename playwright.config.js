@@ -3,9 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-
   fullyParallel: true,
-
   reporter: "list",
 
   use: {
@@ -15,8 +13,16 @@ export default defineConfig({
 
   projects: [
     {
+      name: "setup",
+      testMatch: /auth\.setup\.js/,
+    },
+    {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "playwright/.auth/user.json",
+      },
+      testIgnore: /auth\.setup\.js/,
     },
   ],
 

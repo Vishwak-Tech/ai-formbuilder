@@ -27,11 +27,25 @@ test("homepage displays the correct title and hero content", async ({
 });
 
 
-test("Create AI Form sends unauthenticated users to sign-in", async ({ page }) => {
-  await page.goto("/");
-  await page.getByRole("link", { name: /Create AI Form/i }).click();
-  await expect(page).toHaveURL(/\/sign-in/);
+test("unauthenticated user cannot access dashboard", async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  try {
+    await context.clearCookies();
+
+    console.log("Cookies after clearing:", await context.cookies());
+
+    await page.goto("/dashboard");
+
+    console.log("Final URL:", page.url());
+
+    await expect(page).toHaveURL(/\/sign-in/);
+  } finally {
+    await context.close();
+  }
 });
+
 
 
 test("homepage displays the How It Works section", async ({ page }) => {
@@ -109,7 +123,7 @@ test("full homepage renders all major sections", async ({ page }) => {
   ).toBeVisible();
 
   // 4. Verify the Footer
-  const footer = page.locator("footer");
+const footer = page.getByRole("contentinfo");
 
   await expect(footer).toBeVisible();
   await expect(
