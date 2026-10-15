@@ -14,6 +14,7 @@
 /coverage
 /playwright/.auth/    
 /playwright/.auth.json
+/test-results/
 
 # next.js
 /.next/
