@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { razorpay } from "@/lib/razorpay";
+import { getRazorpay } from "@/lib/razorpay";
 
 export async function POST(req) {
   try {
@@ -23,6 +23,7 @@ export async function POST(req) {
         );
     }
 
+    const razorpay = getRazorpay();
     const order = await razorpay.orders.create({
       amount,
       currency: "INR",
