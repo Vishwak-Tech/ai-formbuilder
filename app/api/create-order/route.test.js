@@ -9,11 +9,11 @@ const { mockCreate } = vi.hoisted(() => {
 });
 
 vi.mock("@/lib/razorpay", () => ({
-  razorpay: {
+  getRazorpay: () => ({
     orders: {
       create: mockCreate,
     },
-  },
+  }),
 }));
 
 import { POST } from "./route";
