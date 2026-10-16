@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
 
-import { db } from "@/configs";
+import { getDb } from "@/configs";
 import { subscriptions } from "@/configs/schema";
 
 export async function POST(req) {
@@ -46,6 +46,7 @@ export async function POST(req) {
     }
 
     // Check Existing Subscription
+    const db = getDb();
     const existingSubscription = await db.query.subscriptions.findFirst({
       where: eq(subscriptions.clerkUserId, clerkUserId),
     });

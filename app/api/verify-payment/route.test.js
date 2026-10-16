@@ -19,7 +19,7 @@ const {
 }));
 
 vi.mock("@/configs", () => ({
-  db: {
+  getDb: () => ({
     query: {
       subscriptions: {
         findFirst: mockFindFirst,
@@ -27,8 +27,9 @@ vi.mock("@/configs", () => ({
     },
     insert: mockInsert,
     update: mockUpdate,
-  },
+  }),
 }));
+
 
 vi.mock("@/configs/schema", () => ({
   subscriptions: {
