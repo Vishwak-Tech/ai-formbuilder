@@ -22,45 +22,38 @@ function SideNav() {
 
   const remainingForms = Math.max(maxFreeForms - totalForms, 0);
 
-  const checkSubscription = async () => {
-    try {
-      const result = await db
-        .select()
-        .from(subscriptions)
-        .where(
-          and(
-            eq(subscriptions.clerkUserId, user.id),
-            eq(subscriptions.status, "ACTIVE"),
-            eq(subscriptions.isActive, true),
-            gt(subscriptions.expiryDate, new Date()),
-          ),
-        );
-
-      setIsPro(result.length > 0);
-    } catch (error) {
-      console.error("Failed to fetch subscription:", error);
-    }
-  };
-
   useEffect(() => {
-    if (user) {
-      getTotalForms();
-      checkSubscription();
-    }
+    if (!user) return;
+
+    const loadSideNavData = async () => {
+      try {
+        const [formResult, subscriptionResult] = await Promise.all([
+          db
+            .select()
+            .from(forms)
+            .where(eq(forms.createdBy, user.primaryEmailAddress?.emailAddress)),
+          db
+            .select()
+            .from(subscriptions)
+            .where(
+              and(
+                eq(subscriptions.clerkUserId, user.id),
+                eq(subscriptions.status, "ACTIVE"),
+                eq(subscriptions.isActive, true),
+                gt(subscriptions.expiryDate, new Date()),
+              ),
+            ),
+        ]);
+
+        setTotalForms(formResult.length);
+        setIsPro(subscriptionResult.length > 0);
+      } catch (error) {
+        console.error("Failed to fetch side navigation data:", error);
+      }
+    };
+
+    loadSideNavData();
   }, [user]);
-
-  const getTotalForms = async () => {
-    try {
-      const result = await db
-        .select()
-        .from(forms)
-        .where(eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress));
-
-      setTotalForms(result.length);
-    } catch (error) {
-      console.error("Failed to fetch forms:", error);
-    }
-  };
 
   const menuList = [
     {

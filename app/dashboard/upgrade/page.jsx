@@ -17,45 +17,43 @@ export default function UpgradePage() {
   const [subscription, setSubscription] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      checkSubscription();
-    }
-  }, [user]);
+    if (!user) return;
 
-  async function checkSubscription() {
-    try {
-      const result = await db
-        .select()
-        .from(subscriptions)
-        .where(
-          and(
-            eq(subscriptions.clerkUserId, user.id),
-            eq(subscriptions.status, "ACTIVE"),
-            eq(subscriptions.isActive, true),
-            gt(subscriptions.expiryDate, new Date())
-          )
-        );
+    const checkSubscription = async () => {
+      try {
+        const result = await db
+          .select()
+          .from(subscriptions)
+          .where(
+            and(
+              eq(subscriptions.clerkUserId, user.id),
+              eq(subscriptions.status, "ACTIVE"),
+              eq(subscriptions.isActive, true),
+              gt(subscriptions.expiryDate, new Date()),
+            ),
+          );
 
-      if (result.length > 0) {
-        setSubscription(result[0]);
-        setIsPro(true);
-      } else {
-        setSubscription(null);
-        setIsPro(false);
+        if (result.length > 0) {
+          setSubscription(result[0]);
+          setIsPro(true);
+        } else {
+          setSubscription(null);
+          setIsPro(false);
+        }
+      } catch (error) {
+        console.error("Subscription Error:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Subscription Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  }
+    };
+
+    checkSubscription();
+  }, [user]);
 
   if (loading) {
     return (
       <div className="flex h-[70vh] items-center justify-center">
-        <h2 className="text-2xl font-black">
-          Loading Subscription...
-        </h2>
+        <h2 className="text-2xl font-black">Loading Subscription...</h2>
       </div>
     );
   }

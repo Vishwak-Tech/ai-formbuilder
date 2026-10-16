@@ -17,32 +17,33 @@ function LiveAiForm() {
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
-    if (params?.formId) {
-      GetFormData();
-    }
-  }, [params]);
+    const formId = params?.formId;
 
-  const GetFormData = async () => {
-    try {
-      const result = await db
-        .select()
-        .from(forms)
-        .where(eq(forms.id, Number(params.formId)));
+    if (!formId) return;
 
-      console.log(result);
+    const getFormData = async () => {
+      try {
+        const result = await db
+          .select()
+          .from(forms)
+          .where(eq(forms.id, Number(formId)));
 
-      if (result.length > 0) {
-        const form = result[0];
+        if (result.length > 0) {
+          const form = result[0];
 
-        setFormData({
-          ...form,
-          jsonForm: JSON.parse(form.jsonForm),
-        });
+          setFormData({
+            ...form,
+            jsonForm: JSON.parse(form.jsonForm),
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load AI form:", error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
+
+    getFormData();
+  }, [params?.formId]);
+
   const currentBackground =
     backgrounds.find((bg) => bg.id === formData?.background)?.className ||
     "bg-white";

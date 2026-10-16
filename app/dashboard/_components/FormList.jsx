@@ -35,29 +35,34 @@ function FormList() {
   const [formList, setFormList] = useState([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    if (user) {
-      getFormList();
+    if (!user) {
+      return;
     }
+
+    const getFormList = async () => {
+      try {
+        setLoading(true);
+
+        const result = await db
+          .select()
+          .from(forms)
+          .where(
+            eq(forms.createdBy, user.primaryEmailAddress?.emailAddress)
+          )
+          .orderBy(desc(forms.id));
+
+        setFormList(result);
+      } catch (error) {
+        console.error("Failed to fetch forms:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getFormList();
   }, [user]);
-
-  const getFormList = async () => {
-    try {
-      setLoading(true);
-
-      const result = await db
-        .select()
-        .from(forms)
-        .where(eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress))
-        .orderBy(desc(forms.id));
-
-      setFormList(result);
-    } catch (error) {
-      console.error("Failed to fetch forms:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return (

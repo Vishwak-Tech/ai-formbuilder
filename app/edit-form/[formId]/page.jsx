@@ -31,35 +31,42 @@ function EditForm() {
   const formId = Number(params.formId);
 
   useEffect(() => {
-    user && GetFormData();
-  }, [user]);
+    if (!user || !formId) return;
 
-  const GetFormData = async () => {
-    const result = await db
-      .select()
-      .from(forms)
-      .where(
-        and(
-          eq(forms.id, formId),
-          eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress),
-        ),
-      );
+    const getFormData = async () => {
+      try {
+        const result = await db
+          .select()
+          .from(forms)
+          .where(
+            and(
+              eq(forms.id, formId),
+              eq(forms.createdBy, user.primaryEmailAddress?.emailAddress),
+            ),
+          );
 
-    if (result.length === 0) {
-      console.log("Form not found");
-      return;
-    }
+        if (result.length === 0) {
+          console.log("Form not found");
+          return;
+        }
 
-    const formData = result[0];
-    setRecord(result[0]);
-    const parsedJson = JSON.parse(formData.jsonForm);
-    console.log(parsedJson);
-    setJsonForm(parsedJson);
+        const formData = result[0];
 
-    setSelectedTheme(formData.theme || "light");
-    setSelectedBackground(formData.background || "none");
-    setSelectedStyle(formData.style || "neobrutalism");
-  };
+        setRecord(formData);
+
+        const parsedJson = JSON.parse(formData.jsonForm);
+        setJsonForm(parsedJson);
+
+        setSelectedTheme(formData.theme || "light");
+        setSelectedBackground(formData.background || "none");
+        setSelectedStyle(formData.style || "neobrutalism");
+      } catch (error) {
+        console.error("Failed to load form data:", error);
+      }
+    };
+
+    getFormData();
+  }, [user, formId]);
 
   const saveForm = async (updatedData = {}) => {
     if (!record) return;
@@ -161,7 +168,7 @@ function EditForm() {
         </button>
 
         <div className="flex items-center gap-3">
-          <Link href={'/aiform/'+record?.id} target="_blank">
+          <Link href={"/aiform/" + record?.id} target="_blank">
             <button
               className="flex gap-2 rounded-lg border-4 border-black bg-cyan-300 px-5 py-2 font-bold 
           shadow-[4px_4px_0px_#000] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none"

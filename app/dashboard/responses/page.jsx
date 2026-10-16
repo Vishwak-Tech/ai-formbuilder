@@ -23,11 +23,9 @@ function Responses() {
   const [formsList, setFormsList] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user) {
-      getFormList();
-    }
-  }, [user]);
+
+useEffect(() => {
+  if (!user) return;
 
   const getFormList = async () => {
     try {
@@ -36,7 +34,9 @@ function Responses() {
       const result = await db
         .select()
         .from(forms)
-        .where(eq(forms.createdBy, user?.primaryEmailAddress?.emailAddress))
+        .where(
+          eq(forms.createdBy, user.primaryEmailAddress?.emailAddress)
+        )
         .orderBy(desc(forms.createdAt));
 
       // Attach response count to every form
@@ -51,16 +51,19 @@ function Responses() {
             ...form,
             responseCount: responses.length,
           };
-        }),
+        })
       );
 
       setFormsList(formsWithResponses);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to fetch forms and responses:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  getFormList();
+}, [user]);
 
   const handleExport = async (formId, formTitle) => {
     try {
