@@ -12,6 +12,9 @@ jobs:
     name: Lint, Test, and Build
     runs-on: ubuntu-latest
 
+    env:
+      NEXT_PUBLIC_APP_URL: https://example.com
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
