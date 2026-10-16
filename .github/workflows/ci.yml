@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NEXT_PUBLIC_APP_URL: https://example.com
+      NEXT_PUBLIC_APP_URL: https://formcraft-ai-mocha.vercel.app
 
     steps:
       - name: Checkout repository
